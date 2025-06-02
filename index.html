@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumConsent CHU Toulouse - Démo Interactive Révolutionnaire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #2c3e50;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #1e3a8a;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .header-nav {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+
+        .nav-button {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-button.active {
+            background: rgba(255,255,255,0.4);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .french-banner {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px 25px;
+            font-weight: 600;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 1.1em;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .view-mode-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .view-mode-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .quick-stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .quick-stat {
+            background: rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .quick-stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .quick-stat-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            color: white;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .scenario-selector {
+            margin-bottom: 40px;
+        }
+
+        .selector-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .selector-header h2 {
+            color: #1e3a8a;
+            font-size: 2.2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .selector-header p {
+            font-size: 1.2em;
+            color: #64748b;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .selector-dropdown {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px 25px;
+            font-size: 1.2em;
+            color: #2c3e50;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+            max-width: 700px;
+            width: 100%;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%231e3a8a' viewBox='0 0 16 16'%3e%3cpath d='M8 11L3 6h10l-5 5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .selector-dropdown:focus {
+            outline: none;
+            border-color: #1e3a8a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .scenario-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-top: 40px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .scenario-title {
+            font-size: 2.4em;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: 600;
+        }
+
+        .context-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .context-section h3 {
+            color: #1e3a8a;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .context-section p {
+            font-size: 1.1em;
+            color: #475569;
+            line-height: 1.7;
+        }
+
+        .workflow-section {
+            margin: 40px 0;
+        }
+
+        .workflow-title {
+            color: #1e3a8a;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .workflow-steps {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            border-color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(30, 58, 138, 0.1);
+        }
+
+        .step-number {
+            background: #1e3a8a;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 1.05em;
+            color: #475569;
+        }
+
+        .biomimetic-flow {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .flow-title {
+            color: #1e3a8a;
+            font-size: 1.4em;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .flow-node {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .flow-node:hover {
+            border-color: #1e3a8a;
+            box-shadow: 0 4px 6px rgba(30, 58, 138, 0.2);
+            transform: scale(1.1);
+        }
+
+        .flow-node.active {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        .flow-node-label {
+            font-size: 0.6em;
+            color: #64748b;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .flow-arrow {
+            font-size: 1.5em;
+            color: #64748b;
+            animation: flow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        }
+
+        @keyframes flow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .neural-view-toggle {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .neural-view-toggle:hover {
+            background: #1e40af;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .metric-card {
+            background: #1e3a8a;
+            border: 2px solid #1e3a8a;
+            border-radius: 12px;
+            padding: 15px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .metric-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .metric-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            color: white;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .demo-button {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 40px auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .console-section {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 40px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            border: 1px solid #334155;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .console-header {
+            color: #e2e8f0;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .log-legend {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .console-log {
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            animation: fadeIn 0.5s ease-in;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .log-icon {
+            font-size: 1em;
+            flex-shrink: 0;
+        }
+
+        .log-success { 
+            background: rgba(34, 197, 94, 0.2); 
+            color: #22c55e; 
+            border-left: 3px solid #22c55e;
+        }
+        
+        .log-info { 
+            background: rgba(59, 130, 246, 0.2); 
+            color: #3b82f6; 
+            border-left: 3px solid #3b82f6;
+        }
+        
+        .log-warning { 
+            background: rgba(245, 158, 11, 0.2); 
+            color: #f59e0b; 
+            border-left: 3px solid #f59e0b;
+        }
+
+        .log-human { 
+            background: rgba(139, 69, 19, 0.2); 
+            color: #d2691e; 
+            border-left: 3px solid #d2691e;
+            font-style: italic;
+        }
+
+        .log-coordination { 
+            background: rgba(147, 51, 234, 0.2); 
+            color: #9333ea; 
+            border-left: 3px solid #9333ea;
+        }
+
+        .results-section {
+            margin: 40px 0;
+        }
+
+        .results-title {
+            color: #1e3a8a;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .result-card {
+            background: #1e3a8a;
+            border: 2px solid #1e3a8a;
+            border-radius: 12px;
+            padding: 15px 18px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.8em;
+            color: white;
+            margin-bottom: 8px;
+            opacity: 0.95;
+        }
+
+        .result-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: white;
+        }
+
+        .impact-global {
+            background: #1e3a8a;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .impact-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .impact-value {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .impact-desc {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .quantum-metrics {
+            margin: 30px 0;
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .quantum-metrics h3 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        /* Modal styles */
+        .audit-trail-modal, .feedback-modal, .doc-modal, .events-modal, .test-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .audit-table th, .audit-table td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        .audit-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .audit-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .audit-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .search-filter {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1em;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .export-btn:hover {
+            background: #1e40af;
+        }
+
+        /* Nouveau style pour le bouton de nettoyage exports */
+        .clear-exports-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .clear-exports-btn:hover {
+            background: #b91c1c;
+        }
+
+        .feedback-rating {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .star {
+            font-size: 2em;
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.3s ease;
+        }
+
+        .star:hover, .star.active {
+            color: #fbbf24;
+        }
+
+        .feedback-form {
+            margin: 20px 0;
+        }
+
+        .feedback-form textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .submit-feedback {
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .submit-feedback:hover {
+            background: #16a34a;
+        }
+
+        .doc-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .doc-section h3 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        .event-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            border-color: #1e3a8a;
+            box-shadow: 0 2px 4px rgba(30, 58, 138, 0.1);
+        }
+
+        .event-card h4 {
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .test-suite {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .test-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-item:hover {
+            border-color: #1e3a8a;
+            transform: translateY(-2px);
+        }
+
+        .test-item.passed {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .test-item.failed {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .test-item.running {
+            border-color: #f59e0b;
+            background: #fffbeb;
+            animation: pulse 2s infinite;
+        }
+
+        .missing-elements {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .missing-elements h3 {
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+
+        .missing-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .missing-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .missing-list li:before {
+            content: "❌ ";
+            margin-right: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid, .results-grid {
+                grid-template-columns: 1fr;
+                max-width: 300px;
+            }
+            
+            .quick-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .scenario-title {
+                font-size: 2em;
+            }
+            
+            .scenario-content {
+                padding: 25px;
+            }
+
+            .flow-diagram {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+
+            .view-mode-toggle {
+                position: static;
+                margin: 20px auto;
+                display: block;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="director-mode">
+    <div class="header">
+        <div class="view-mode-toggle" onclick="toggleViewMode()">
+            <span id="viewModeText">👔 Mode Directeur</span>
+        </div>
+        
+        <div class="header-nav">
+            <button class="nav-button active" onclick="showSection('scenarios')">🏥 Scénarios CHU</button>
+            <button class="nav-button" onclick="openAuditTrail()">🔍 Audit Trail</button>
+            <button class="nav-button" onclick="openFeedback()">💬 Feedback</button>
+            <button class="nav-button" onclick="openEvents()">⚡ Événements</button>
+            <button class="nav-button" onclick="openTests()">🧪 Tests</button>
+            <button class="nav-button" onclick="openDocumentation()">📖 Guide</button>
+        </div>
+        
+        <h1>🧬 QuantumConsent CHU</h1>
+        <div class="subtitle">Architecture Biomimétique pour Centres Hospitaliers Universitaires</div>
+        <div class="french-banner">🇫🇷 Solution 100% Française - Spécialisée Secteur Hospitalier Public</div>
+        
+        <div class="quick-stats">
+            <div class="quick-stat">
+                <div class="quick-stat-value">-70% charge admin</div>
+                <div class="quick-stat-label">Automatisation workflow</div>
+            </div>
+            <div class="quick-stat">
+                <div class="quick-stat-value">ROI garanti</div>
+                <div class="quick-stat-label">624% secteur public</div>
+            </div>
+            <div class="quick-stat">
+                <div class="quick-stat-value">6 services CHU</div>
+                <div class="quick-stat-label">Éventail complet</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="scenario-selector">
+            <div class="selector-header">
+                <h2>🏥 Éventail Complet Scénarios CHU Spécialisés</h2>
+                <p>Découvrez la polyvalence révolutionnaire de QuantumConsent dans les 6 services clés du CHU de Toulouse</p>
+            </div>
+            
+            <select class="selector-dropdown" id="scenarioSelect" onchange="loadScenario()">
+                <option value="">-- Sélectionnez un scénario d'usage hospitalier CHU Toulouse --</option>
+                <option value="pediatrie">👶 Pédiatrie : Consentement Complexe Mineur + Recherche</option>
+                <option value="urgences">🚨 Urgences Vitales : Consentement Différé et Traçabilité</option>
+                <option value="radiotherapie">☢️ Radiothérapie : Adaptation Réglementaire ASN/IRSN</option>
+                <option value="recherche">🔬 Recherche Clinique : CPP + ANSM Multi-Consentements</option>
+                <option value="chirurgie">🏥 Chirurgie : Programme Personnalisé de Soins (PPS)</option>
+                <option value="psychiatrie">🧠 Psychiatrie : Populations Vulnérables + Tutelles</option>
+            </select>
+
+            <div id="scenarioContent" class="scenario-content">
+                <!-- Le contenu sera chargé dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Audit Trail Modal -->
+    <div id="auditTrailModal" class="audit-trail-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('auditTrailModal')">&times;</button>
+            <h2>🔍 Audit Trail - CHU Toulouse</h2>
+            <p>Traçabilité exhaustive et auditabilité conforme HAS/ARS/CNIL/ANSM</p>
+            
+            <input type="text" id="auditSearch" class="search-filter" placeholder="🔍 Rechercher dans les logs (utilisateur, patient, action...)" oninput="filterAuditData()">
+            
+            <div class="advanced-search" style="margin: 20px 0; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h4 style="color: #1e3a8a; margin-bottom: 15px;">🔍 Recherche Avancée</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <select id="userFilter" onchange="applyAdvancedFilters()" style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                        <option value="">👤 Tous les utilisateurs</option>
+                        <option value="Dr. Martin">Dr. Martin (Radiothérapie)</option>
+                        <option value="IDE Dupont">IDE Dupont (Urgences)</option>
+                        <option value="ARC Morel">ARC Morel (Recherche)</option>
+                        <option value="System">System QuantumConsent</option>
+                        <option value="DPO Virtual">DPO Virtual</option>
+                    </select>
+                    <select id="actionFilter" onchange="applyAdvancedFilters()" style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                        <option value="">⚡ Toutes les actions</option>
+                        <option value="Accès">Accès consentement</option>
+                        <option value="Modification">Modification consentement</option>
+                        <option value="Création">Création protocole</option>
+                        <option value="Détection">Détection incident</option>
+                        <option value="Vérification">Vérification conformité</option>
+                    </select>
+                    <select id="resultFilter" onchange="applyAdvancedFilters()" style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                        <option value="">📊 Tous les résultats</option>
+                        <option value="Succès">✅ Succès</option>
+                        <option value="Alerte">⚠️ Alerte</option>
+                        <option value="Erreur">❌ Erreur</option>
+                    </select>
+                    <input type="date" id="dateFilter" onchange="applyAdvancedFilters()" style="padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;" value="2025-05-31">
+                </div>
+                <button onclick="resetFilters()" style="margin-top: 10px; padding: 6px 12px; background: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Réinitialiser filtres</button>
+            </div>
+            
+            <div class="export-buttons">
+                <button class="export-btn" onclick="exportAudit('csv')">📊 Export CSV</button>
+                <button class="export-btn" onclick="exportAudit('pdf')">📄 Export PDF</button>
+                <button class="export-btn" onclick="exportAudit('json')" style="background: #059669;">📋 Export JSON</button>
+                <button class="export-btn" onclick="toggleLiveStream()" id="liveStreamBtn" style="background: #dc2626;">🔴 Démarrer Stream Live</button>
+                <button class="clear-exports-btn" onclick="clearAllExports()">🗑️ Effacer Exports</button>
+            </div>
+
+            <!-- Console pour les exports et actions audit -->
+            <div class="console-section" style="margin: 20px 0;">
+                <div class="console-header">
+                    <span>🖥️ Console Audit CHU - Actions Temps Réel</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="log-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #22c55e;"></div>
+                                <span>Export</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #dc2626;"></div>  
+                                <span>Suppression</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #3b82f6;"></div>
+                                <span>Stream</span>
+                            </div>
+                        </div>
+                        <button onclick="clearAuditConsole()" style="background: #f59e0b; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">🗑️ Vider</button>
+                    </div>
+                </div>
+                <div id="console-audit">
+                    <div class="console-log log-info">
+                        <span class="log-icon">💻</span>
+                        <span>Console audit prête - Utilisez les boutons d'export et de gestion pour voir les actions...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="auditTableContainer">
+                <!-- Table will be loaded here -->
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #f0fdf4; border: 1px solid #22c55e; border-radius: 8px;">
+                <h4 style="color: #166534; margin-bottom: 10px;">✅ Fonctionnalités Avancées (Production Ready)</h4>
+                <ul style="list-style: none; padding: 0; color: #166534;">
+                    <li>✅ Recherche avancée multi-critères (utilisateur, action, résultat, date)</li>
+                    <li>✅ Streaming logs temps réel avec arrêt automatique</li>
+                    <li>✅ Exports enrichis avec métadonnées (CSV/PDF/JSON)</li>
+                    <li>✅ Hash d'intégrité SHA256 par entrée</li>
+                    <li>✅ Traçabilité complète des actions utilisateur</li>
+                    <li>✅ Interface responsive et ergonomique</li>
+                    <li>✅ Console interactive avec logs contextualisés</li>
+                    <li>✅ Anonymisation automatique des données patients</li>
+                    <li>✅ Métriques spécifiques par service CHU</li>
+                    <li>✅ Workflow biomimétique adaptatif</li>
+                    <li>✅ Réinitialisation et nettoyage des données</li>
+                    <li>✅ Animations et feedback utilisateur temps réel</li>
+                    <li>✅ Bouton nettoyage exports console</li>
+                </ul>
+            </div>
+            
+            <div class="missing-elements">
+                <h3>⚠️ Éléments non implémentés dans cette démo</h3>
+                <ul class="missing-list">
+                    <li>Archivage sécurisé selon durée légale (10-30 ans)</li>
+                    <li>Hébergement HDS certifié (Health Data Hosting)</li>
+                    <li>Signature électronique qualifiée eIDAS</li>
+                    <li>Intégration SIEM temps réel (Splunk, ELK Stack)</li>
+                    <li>Notification automatique incidents critiques (SMS/Email)</li>
+                    <li>Gestion des droits d'accès granulaires (RBAC/ABAC)</li>
+                    <li>Chiffrement end-to-end AES-256</li>
+                    <li>Horodatage qualifié RFC 3161</li>
+                    <li>Sauvegarde géo-redondante</li>
+                    <li>Conformité ISO 27001/27799</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="feedback-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('feedbackModal')">&times;</button>
+            <h2>💬 Feedback - QuantumConsent CHU</h2>
+            <p>Votre avis nous aide à améliorer l'expérience utilisateur</p>
+            
+            <div class="feedback-rating">
+                <span class="star" onclick="setRating(1)">⭐</span>
+                <span class="star" onclick="setRating(2)">⭐</span>
+                <span class="star" onclick="setRating(3)">⭐</span>
+                <span class="star" onclick="setRating(4)">⭐</span>
+                <span class="star" onclick="setRating(5)">⭐</span>
+            </div>
+            
+            <div class="feedback-form">
+                <textarea id="feedbackComment" placeholder="Partagez votre expérience avec QuantumConsent CHU (optionnel)..."></textarea>
+                <input type="hidden" id="currentRating" value="">
+                <button class="submit-feedback" onclick="submitFeedback()">📤 Envoyer le feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Modal -->
+    <div id="eventsModal" class="events-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('eventsModal')">&times;</button>
+            <h2>⚡ Événements Système - Simulations</h2>
+            <p>Testez la réactivité de QuantumConsent face aux situations critiques</p>
+            
+            <div class="event-card" onclick="simulateEvent('maintenance')">
+                <h4>🔧 Maintenance Système</h4>
+                <p>Simulation d'une maintenance planifiée avec sauvegarde automatique des sessions</p>
+            </div>
+            
+            <div class="event-card" onclick="simulateEvent('security')">
+                <h4>🛡️ Incident Sécurité</h4>
+                <p>Simulation d'une tentative d'accès non autorisé détectée par SOBICA</p>
+            </div>
+            
+            <div class="event-card" onclick="simulateEvent('evolution')">
+                <h4>📋 Évolution Réglementaire</h4>
+                <p>Simulation d'une nouvelle directive ANSM détectée par AMORA</p>
+            </div>
+
+            <!-- Console pour les événements -->
+            <div class="console-section" style="margin-top: 30px;">
+                <div class="console-header">
+                    <span>🖥️ Console Événements CHU - Simulation Temps Réel</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="log-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #22c55e;"></div>
+                                <span>Succès</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #f59e0b;"></div>  
+                                <span>Process</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #3b82f6;"></div>
+                                <span>Info</span>
+                            </div>
+                        </div>
+                        <button onclick="clearEventsConsole()" style="background: #f59e0b; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">🗑️ Vider</button>
+                    </div>
+                </div>
+                <div id="console-events">
+                    <div class="console-log log-info">
+                        <span class="log-icon">💻</span>
+                        <span>Console événements prête - Cliquez sur un événement pour lancer la simulation...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tests Modal -->
+    <div id="testsModal" class="test-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('testsModal')">&times;</button>
+            <h2>🧪 Suite de Tests - QuantumConsent CHU</h2>
+            <p>Tests système progressifs pour valider l'intégrité de la plateforme</p>
+            
+            <!-- Vue Tests -->
+            <div id="testsView">
+                <div class="test-suite">
+                    <div class="test-item" onclick="runTest('connectivité')">
+                        <h4>🔗 Connectivité</h4>
+                        <p>Test des connexions DPI/ORBIS</p>
+                    </div>
+                    
+                    <div class="test-item" onclick="runTest('sécurité')">
+                        <h4>🛡️ Sécurité</h4>
+                        <p>Vérification SOBICA</p>
+                    </div>
+                    
+                    <div class="test-item" onclick="runTest('conformité')">
+                        <h4>✅ Conformité</h4>
+                        <p>Audit RGPD/HAS/ANSM</p>
+                    </div>
+                    
+                    <div class="test-item" onclick="runTest('performance')">
+                        <h4>⚡ Performance</h4>
+                        <p>Charge système optimale</p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="export-btn" onclick="resetAllTests()" style="background: #dc2626; padding: 10px 20px;">
+                        🔄 Réinitialiser tous les tests
+                    </button>
+                </div>
+                
+                <div class="missing-elements">
+                    <h3>⚠️ Tests non implémentés dans cette démo</h3>
+                    <ul class="missing-list">
+                        <li>Tests de charge réelle (>1000 utilisateurs simultanés)</li>
+                        <li>Tests de reprise après incident (PRA/PCA)</li>
+                        <li>Tests d'intrusion et pénétration</li>
+                        <li>Validation end-to-end avec vrais systèmes CHU</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Vue Console (cachée par défaut) -->
+            <div id="consoleView" style="display: none;">
+                <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <button onclick="backToTests()" style="background: #64748b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                        ← Retour aux Tests
+                    </button>
+                    <button onclick="clearTestConsole()" style="background: #f59e0b; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                        🗑️ Vider Console
+                    </button>
+                </div>
+                
+                <div class="console-section" style="margin: 0;">
+                    <div class="console-header">
+                        <span>🖥️ Console Tests CHU - Résultats Temps Réel</span>
+                        <div class="log-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #22c55e;"></div>
+                                <span>Succès</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #f59e0b;"></div>  
+                                <span>Test</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot" style="background: #ef4444;"></div>
+                                <span>Échec</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="console-tests">
+                        <div class="console-log log-info">
+                            <span class="log-icon">💻</span>
+                            <span>Console tests CHU initialisée - Lancement des tests...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Documentation Modal -->
+    <div id="docModal" class="doc-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('docModal')">&times;</button>
+            <h2>📖 Guide QuantumConsent CHU</h2>
+            
+            <div class="doc-section">
+                <h3>🚀 Démarrage Rapide</h3>
+                <p><strong>Séquence de test recommandée :</strong></p>
+                <ol>
+                    <li><strong>Sélectionnez un scénario CHU</strong> (ex: Pédiatrie)</li>
+                    <li><strong>Cliquez "🎬 Lancer la Démonstration Interactive CHU"</strong></li>
+                    <li><strong>Cliquez "🔬 Activer Animation Neuronale CHU"</strong></li>
+                    <li><strong>Observez la console temps réel</strong> avec messages biomimétiques</li>
+                    <li><strong>Consultez les métriques</strong> post-simulation</li>
+                </ol>
+            </div>
+            
+            <div class="doc-section">
+                <h3>📊 Dashboards Disponibles</h3>
+                <p><strong>Métriques temps réel :</strong></p>
+                <ul>
+                    <li>⚡ Adaptation réglementaire : &lt;18h vs 4-8 semaines</li>
+                    <li>🛡️ Détection incidents : 8 sec vs plusieurs heures</li>
+                    <li>💰 Économies annuelles : €847k CHU Toulouse</li>
+                    <li>📊 Réduction charge admin : -73%</li>
+                    <li>🔗 Intégration DPI : 36h vs 6 mois</li>
+                    <li>✅ Conformité RGPD : 99.7%</li>
+                    <li>👥 Patients traités : 2,340/mois</li>
+                    <li>🏥 Services intégrés : 6/6 CHU</li>
+                </ul>
+            </div>
+            
+            <div class="doc-section">
+                <h3>🎯 Modules Interactifs</h3>
+                <p><strong>Fonctionnalités principales :</strong></p>
+                <ul>
+                    <li><strong>🔍 Audit Trail</strong> - Historique complet conforme HAS/ARS/CNIL</li>
+                    <li><strong>💬 Feedback</strong> - Système notation 1-5 étoiles</li>
+                    <li><strong>⚡ Événements</strong> - 3 simulations (Maintenance, Sécurité, Évolution)</li>
+                    <li><strong>🧪 Tests</strong> - Suite 4 tests système progressifs</li>
+                    <li><strong>📖 Guide</strong> - Documentation complète</li>
+                    <li><strong>🏥 Scénarios</strong> - 6 services CHU spécialisés</li>
+                </ul>
+            </div>
+            
+            <div class="doc-section">
+                <h3>🧬 Technologies Simulées</h3>
+                <ul>
+                    <li><strong>CSO</strong> - Cellules Souches Orchestrales (coordination workflow)</li>
+                    <li><strong>SOBICA</strong> - Système Immunitaire Digital (sécurité)</li>
+                    <li><strong>CCAE</strong> - Intelligence Contextuelle (adaptation)</li>
+                    <li><strong>DPO Virtuel</strong> - Conformité automatisée (RGPD/HAS)</li>
+                    <li><strong>AMORA</strong> - Veille réglementaire (ASN/ANSM)</li>
+                </ul>
+            </div>
+            
+            <div class="missing-elements">
+                <h3>⚠️ Éléments non implémentés dans cette démo</h3>
+                <ul class="missing-list">
+                    <li>Connexion réelle aux DPI hospitaliers (ORBIS, EASILY, etc.)</li>
+                    <li>Intégration authentification SSO/LDAP CHU</li>
+                    <li>Base de données patients réelle</li>
+                    <li>Notifications push temps réel (SMS, email)</li>
+                    <li>Signature électronique qualifiée</li>
+                    <li>Hébergement HDS certifié</li>
+                    <li>API d'intégration avec systèmes tiers</li>
+                    <li>Module de facturation et comptabilité</li>
+                    <li>Gestion des plannings et ressources</li>
+                    <li>Tableaux de bord direction en temps réel</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isDirectorMode = true;
+        let currentScenario = null;
+        let exportHistory = [];
+        let liveStreamActive = false;
+        let liveStreamInterval = null;
+
+        const scenarios = {
+            pediatrie: {
+                title: "👶 Pédiatrie : Consentement Complexe Mineur + Recherche",
+                context: "Un adolescent de 13 ans atteint d'un médulloblastome doit bénéficier d'une radiothérapie pédiatrique innovante dans le cadre du protocole de recherche clinique RTEP-2024. La situation nécessite une orchestration complexe de trois types de consentements distincts avec coordination pluridisciplinaire.",
+                steps: [
+                    "Évaluation automatique de la capacité de discernement (patient 13 ans)",
+                    "Tri-consentement coordonné : Autorisation parentale + Assentiment enfant + Recherche CPP",
+                    "Génération de supports pédagogiques adaptés à l'âge (vidéos, schémas interactifs)",
+                    "Vérification de compréhension avec quiz ludique personnalisé",
+                    "Génération automatique des documents CPP/ANSM conformes",
+                    "Coordination équipe pluridisciplinaire (oncologue, psychologue, ARC)",
+                    "Activation du suivi longitudinal intégré sur 5 ans"
+                ],
+                metrics: [
+                    { label: "7 min | -89%", value: "Durée | Erreurs", tooltip: "Processus complet en 7 minutes vs 35 minutes traditionnellement avec réduction de 89% des erreurs" },
+                    { label: "+68% | 99.8%", value: "Satisfaction | Conformité", tooltip: "Amélioration de 68% de l'expérience famille avec conformité CPP/ANSM à 99.8%" },
+                    { label: "€23.4k | 4", value: "Économies | Spécialités", tooltip: "Économies annuelles de 23,400€ avec coordination automatique de 4 spécialités médicales" },
+                    { label: "5 ans | 12", value: "Tracking | Documents", tooltip: "Suivi longitudinal automatique sur 5 ans avec génération de 12 documents conformes" }
+                ],
+                results: [
+                    { label: "Documents générés", value: "12 auto" },
+                    { label: "Coordination équipes", value: "4 spécialités" },
+                    { label: "Tracking longitudinal", value: "5 ans" },
+                    { label: "Économies annuelles", value: "€23,400" }
+                ],
+                impact: { title: "Impact Pédiatrie CHU", value: "SUCCESS", desc: "Workflow mineur optimisé - Recherche clinique fluidifiée" },
+                flowNodes: [
+                    { id: "patient", icon: "👶", label: "Patient 13a", tooltip: "Adolescent avec médulloblastome" },
+                    { id: "parents", icon: "👨‍👩‍👧", label: "Parents", tooltip: "Autorisation parentale" },
+                    { id: "cso", icon: "🧬", label: "CSO-Pédiatrie", tooltip: "Cellule Souche Orchestrale spécialisée pédiatrie" },
+                    { id: "oncologue", icon: "👨‍⚕️", label: "Oncologue", tooltip: "Médecin spécialiste" },
+                    { id: "cpp", icon: "📋", label: "CPP/ANSM", tooltip: "Comité Protection Personnes / Agence Sécurité Médicament" }
+                ],
+                logs: [
+                    { type: "info", icon: "🤖", text: "[CSO-PEDIATRIE] Activation workflow mineur 13 ans - Médulloblastome" },
+                    { type: "human", icon: "👨‍👩‍👧", text: "[CONSENT-PARENTAL] Autorisation parentale recueillie par équipe soignante" },
+                    { type: "human", icon: "👶", text: "[CONSENT-ENFANT] Assentiment patient 13 ans recueilli avec support pédagogique" },
+                    { type: "success", icon: "🤖", text: "[CPP-GENERATOR] Documents recherche RTEP-2024 générés automatiquement" },
+                    { type: "coordination", icon: "🔄", text: "[COORD-EQUIPE] Orchestration oncologue + psychologue + ARC activée" }
+                ]
+            },
+            urgences: {
+                title: "🚨 Urgences Vitales : Consentement Différé et Traçabilité",
+                context: "Patient de 45 ans, inconscient suite à un accident de la circulation avec traumatisme crânien grave. Une intervention neurochirurgicale d'urgence est nécessaire selon l'Article L1111-4 du Code de Santé Publique (exception d'urgence vitale). Le système doit gérer le consentement différé tout en assurant une traçabilité complète.",
+                steps: [
+                    "Détection automatique du contexte 'urgence vitale' par l'équipe médicale",
+                    "Activation du mode dégradé avec justification médicale L1111-4 CSP",
+                    "Documentation automatique de l'exception éthique et légale",
+                    "Notification instantanée DPO + Direction médicale + Cadre de santé",
+                    "Recueil du consentement différé dès réveil du patient",
+                    "Information et coordination avec la famille (épouse présente)",
+                    "Préparation automatique du dossier pour audit HAS/ARS"
+                ],
+                metrics: [
+                    { label: "<2 min | 100%", value: "Activation | Traçabilité", tooltip: "Activation mode dégradé en moins de 2 minutes avec traçabilité complète des décisions" },
+                    { label: "99.4% | €184k", value: "Conformité | Évités", tooltip: "Conformité L1111-4 CSP à 99.4% avec 184k€ de coûts d'incidents évités" },
+                    { label: "67 pages | 8", value: "Documentation | Notifications", tooltip: "Documentation automatique de 67 pages avec notification de 8 acteurs concernés" },
+                    { label: "HAS Ready | DPO", value: "Audit | Notification", tooltip: "Dossier audit HAS préparé automatiquement avec notification DPO instantanée" }
+                ],
+                results: [
+                    { label: "Documentation auto", value: "67 pages" },
+                    { label: "Notifications", value: "8 acteurs" },
+                    { label: "Audit HAS", value: "Ready" },
+                    { label: "Économies évitées", value: "€180,000" }
+                ],
+                impact: { title: "Impact Urgences CHU", value: "SUCCESS", desc: "Gestion exception vitale - Traçabilité renforcée" },
+                flowNodes: [
+                    { id: "patient", icon: "🚨", label: "Patient TC", tooltip: "Patient traumatisme crânien grave" },
+                    { id: "urgentiste", icon: "👨‍⚕️", label: "Urgentiste", tooltip: "Médecin urgentiste" },
+                    { id: "cso", icon: "🧬", label: "CSO-Urgences", tooltip: "Mode dégradé urgence vitale" },
+                    { id: "dpo", icon: "🛡️", label: "DPO Auto", tooltip: "Notification automatique DPO" },
+                    { id: "famille", icon: "👥", label: "Famille", tooltip: "Information famille coordonnée" }
+                ],
+                logs: [
+                    { type: "warning", icon: "🚨", text: "[URGENCES-CHU] Mode dégradé activé - Patient inconscient TC grave" },
+                    { type: "info", icon: "🤖", text: "[ETHICS-TRACKER] Justification L1111-4 CSP documentée automatiquement" },
+                    { type: "success", icon: "🤖", text: "[DPO-NOTIF] Notification DPO + Direction médicale envoyée automatiquement" },
+                    { type: "human", icon: "👥", text: "[FAMILY-COORD] Information épouse coordonnée par cadre de santé" },
+                    { type: "success", icon: "🤖", text: "[AUDIT-PREP] Dossier HAS/ARS préparé automatiquement (67 pages)" }
+                ]
+            },
+            radiotherapie: {
+                title: "☢️ Radiothérapie : Adaptation Réglementaire ASN/IRSN",
+                context: "Publication d'une nouvelle directive ASN concernant les seuils de dose en radiothérapie stéréotaxique. Le service de radiothérapie du CHU de Toulouse doit adapter 47 protocoles existants et former les équipes sous 30 jours.",
+                steps: [
+                    "Détection automatique de la nouvelle réglementation ASN via veille réglementaire",
+                    "Analyse d'impact sur les 47 protocoles de radiothérapie existants",
+                    "Génération de 8 nouveaux workflows adaptés aux nouveaux seuils",
+                    "Production automatique de la documentation qualité (89 pages conformes)",
+                    "Déploiement du module e-learning pour formation flash des équipes",
+                    "Mise à jour des consentements patients en cours de traitement",
+                    "Configuration notification automatique incidents dose vers ASN/IRSN"
+                ],
+                metrics: [
+                    { label: "16h | 99.9%", value: "Adaptation | Conformité", tooltip: "Adaptation réglementaire ASN en 16 heures vs 4-8 semaines avec conformité 99.9%" },
+                    { label: "€52k | 89", value: "Économies | Pages doc", tooltip: "Économies de 52k€ sur formation évitée avec 89 pages documentation auto-générée" },
+                    { label: "8 workflows | 100%", value: "Nouveaux seuils | Formation", tooltip: "8 nouveaux workflows seuils ASN créés avec 100% équipes certifiées" },
+                    { label: "167 patients | Export", value: "MAJ dossiers | ASN", tooltip: "167 dossiers patients mis à jour avec exports ASN/IRSN temps réel" }
+                ],
+                results: [
+                    { label: "Documentation", value: "89 pages" },
+                    { label: "Formation équipes", value: "100% certifiées" },
+                    { label: "Patients MAJ", value: "167 dossiers" },
+                    { label: "Économies", value: "€47,000" }
+                ],
+                impact: { title: "Impact Radiothérapie CHU", value: "SUCCESS", desc: "Adaptation ASN/IRSN - Incidents tracés" },
+                flowNodes: [
+                    { id: "asn", icon: "☢️", label: "ASN/IRSN", tooltip: "Autorité Sûreté Nucléaire - Notification incidents" },
+                    { id: "amora", icon: "🤖", label: "AMORA", tooltip: "Moteur conformité réglementaire" },
+                    { id: "cso", icon: "🧬", label: "CSO-Radio", tooltip: "Adaptation protocoles + gestion incidents" },
+                    { id: "equipes", icon: "👨‍⚕️", label: "Équipes", tooltip: "Formation automatique équipes" },
+                    { id: "patients", icon: "🏥", label: "167 Patients", tooltip: "Consentements mis à jour automatiquement" }
+                ],
+                logs: [
+                    { type: "info", icon: "🤖", text: "[ASN-MONITOR] Nouvelle directive ASN détectée - Seuils dose radiothérapie" },
+                    { type: "info", icon: "🤖", text: "[IMPACT-ANALYSIS] Analyse 47 protocoles + gestion incidents dose" },
+                    { type: "success", icon: "🤖", text: "[WORKFLOW-GEN] 8 nouveaux workflows seuils ASN + notification incidents" },
+                    { type: "success", icon: "🤖", text: "[DOC-AUTO] 89 pages documentation + procédures incidents générées" },
+                    { type: "human", icon: "👨‍⚕️", text: "[FORMATION] E-learning équipes + gestion incidents déployé" }
+                ]
+            },
+            recherche: {
+                title: "🔬 Recherche Clinique : CPP + ANSM Multi-Consentements",
+                context: "Mise en place du protocole de recherche clinique RTEP-2025 en oncologie pédiatrique avec biobanque associée au CHU de Toulouse. Nécessité de gérer trois consentements distincts et indépendants.",
+                steps: [
+                    "Configuration automatique du protocole RTEP-2025 selon référentiel CPP/ANSM",
+                    "Génération des trois consentements distincts et indépendants",
+                    "Orchestration workflow ARC avec coordination équipe soignante",
+                    "Intégration randomisation et procédures d'aveugle protocolaires",
+                    "Activation du tracking longitudinal des participants sur 5 ans",
+                    "Mise en place de l'anonymisation recherche préservant la traçabilité",
+                    "Configuration des exports réglementaires ANSM automatiques + gestion retraits"
+                ],
+                metrics: [
+                    { label: "2.5 jours | 99.9%", value: "Setup | Conformité", tooltip: "Setup protocole en 2.5 jours vs 3-4 semaines avec conformité CPP/ANSM 99.9%" },
+                    { label: "+245% | 3x", value: "Efficacité ARC | Consentements", tooltip: "Productivité ARC +245% avec gestion simultanée 3 consentements distincts" },
+                    { label: "5 ans | 97", value: "Tracking | Participants", tooltip: "Suivi longitudinal automatique 5 ans avec 97 participants inclus actifs" },
+                    { label: "100% | Temps réel", value: "Anonymisation | Exports", tooltip: "Anonymisation 100% préservée avec exports ANSM temps réel + gestion retraits" }
+                ],
+                results: [
+                    { label: "Tracking", value: "5 ans auto" },
+                    { label: "Participants", value: "89 patients" },
+                    { label: "Anonymisation", value: "100% ok" },
+                    { label: "Exports ANSM", value: "Temps réel" }
+                ],
+                impact: { title: "Impact Recherche CHU", value: "SUCCESS", desc: "Protocole RTEP-2025 - Tri-consentement maîtrisé" },
+                flowNodes: [
+                    { id: "cpp", icon: "📋", label: "CPP", tooltip: "Comité Protection Personnes" },
+                    { id: "ansm", icon: "💊", label: "ANSM", tooltip: "Agence Sécurité Médicament + exports" },
+                    { id: "cso", icon: "🧬", label: "CSO-Recherche", tooltip: "Tri-consentement orchestré" },
+                    { id: "arc", icon: "👩‍🔬", label: "ARC", tooltip: "Attaché Recherche Clinique" },
+                    { id: "biobanque", icon: "🧪", label: "Biobanque", tooltip: "Consentement échantillons distinct" }
+                ],
+                logs: [
+                    { type: "info", icon: "🤖", text: "[RTEP-2025] Setup protocole recherche oncologie pédiatrique" },
+                    { type: "success", icon: "🤖", text: "[CPP-ANSM] Conformité réglementaire protocole validée" },
+                    { type: "success", icon: "🤖", text: "[CONSENT-3X] 3 consentements distincts générés (Soin≠Recherche≠Biobanque)" },
+                    { type: "success", icon: "🤖", text: "[RANDOMISATION] Procédures d'aveugle + anonymisation intégrées" },
+                    { type: "coordination", icon: "🔄", text: "[TRACKING-5Y] Suivi longitudinal 5 ans + gestion retraits configuré" }
+                ]
+            },
+            chirurgie: {
+                title: "🏥 Chirurgie : Programme Personnalisé de Soins (PPS)",
+                context: "Patient de 58 ans avec adénocarcinome pancréatique nécessitant une duodénopancréatectomie céphalique (Whipple). Orchestration complexe d'une RCP pluridisciplinaire.",
+                steps: [
+                    "Orchestration automatique de la RCP pluridisciplinaire (chirurgien, oncologue, radiologue)",
+                    "Coordination des consentements chirurgie + anesthésie avec timing optimal",
+                    "Personnalisation de l'information risques selon profil patient et comorbidités",
+                    "Intégration planning bloc opératoire avec disponibilités équipes",
+                    "Configuration consentement post-opératoire et suivi oncologique intégré",
+                    "Coordination automatique des équipes (chirurgien, anesthésiste, oncologue, IDE)",
+                    "Intégration traçabilité des décisions RCP dans le dossier patient"
+                ],
+                metrics: [
+                    { label: "91% PPS | -93%", value: "Adaptation | Erreurs", tooltip: "Programme Personnalisé Soins adapté à 91% selon comorbidités avec -93% erreurs" },
+                    { label: "+74% | 6", value: "Satisfaction | Acteurs", tooltip: "Satisfaction patient +74% avec coordination automatique 6 acteurs médicaux" },
+                    { label: "100% synchro | 24", value: "Planning | Mois suivi", tooltip: "Synchronisation planning bloc 100% avec suivi post-opératoire 24 mois" },
+                    { label: "RCP intégrée | €31k", value: "Traçabilité | Économies", tooltip: "Traçabilité complète décisions RCP avec économies annuelles 31k€" }
+                ],
+                results: [
+                    { label: "Erreurs évitées", value: "-91%" },
+                    { label: "Coordination", value: "6 acteurs" },
+                    { label: "Planning", value: "100% synchro" },
+                    { label: "Suivi post-op", value: "24 mois" }
+                ],
+                impact: { title: "Impact Chirurgie CHU", value: "SUCCESS", desc: "PPS personnalisé - Coordination optimale" },
+                flowNodes: [
+                    { id: "rcp", icon: "👥", label: "RCP", tooltip: "Réunion Concertation Pluridisciplinaire" },
+                    { id: "chirurgien", icon: "👨‍⚕️", label: "Chirurgien", tooltip: "Praticien chirurgie pancréatique" },
+                    { id: "cso", icon: "🧬", label: "CSO-Chirurgie", tooltip: "Orchestration PPS personnalisé" },
+                    { id: "bloc", icon: "🏥", label: "Bloc Op.", tooltip: "Planning bloc opératoire optimisé" },
+                    { id: "suivi", icon: "📊", label: "Suivi 24m", tooltip: "Suivi post-opératoire automatisé" }
+                ],
+                logs: [
+                    { type: "info", icon: "🤖", text: "[RCP-COORD] Coordination 4 spécialités - Adénocarcinome pancréatique" },
+                    { type: "human", icon: "👨‍⚕️", text: "[CONSENT-CHIR] Consentement duodénopancréatectomie validé par patient" },
+                    { type: "human", icon: "💉", text: "[CONSENT-ANESTH] Consentement anesthésie générale validé" },
+                    { type: "success", icon: "🤖", text: "[PPS-ADAPT] Personnalisation PPS 91% selon comorbidités" },
+                    { type: "coordination", icon: "🔄", text: "[PLANNING-BLOC] Intégration bloc opératoire + équipes optimisée" }
+                ]
+            },
+            psychiatrie: {
+                title: "🧠 Psychiatrie : Populations Vulnérables + Tutelles",
+                context: "Prise en charge d'un patient de 34 ans avec trouble bipolaire sous curatelle renforcée, hospitalisé en psychiatrie pour décompensation maniaque.",
+                steps: [
+                    "Évaluation automatique et continue de la capacité de consentement du patient",
+                    "Adaptation de l'interface selon les troubles cognitifs et l'état clinique",
+                    "Coordination avec le représentant légal (curateur) selon les besoins",
+                    "Mise en place d'un consentement échelonné selon l'évolution de l'état mental",
+                    "Traçabilité complète des décisions de capacité/incapacité temporaire",
+                    "Intégration du dossier juridique (jugement de curatelle, coordonnées curateur)",
+                    "Respect maximal des droits du patient vulnérable et de son autonomie résiduelle"
+                ],
+                metrics: [
+                    { label: "Continue | 99.6%", value: "Évaluation | Conformité", tooltip: "Évaluation continue capacité avec conformité juridique tutelle/curatelle 99.6%" },
+                    { label: "100% | 89%", value: "Protection | Autonomie", tooltip: "Protection droits patient 100% avec préservation autonomie résiduelle 89%" },
+                    { label: "Seamless | 100%", value: "Coordination | Traçabilité", tooltip: "Coordination seamless avec tutelle/curateur et traçabilité légale complète" },
+                    { label: "+65% | €18k", value: "Satisfaction | Économies", tooltip: "Satisfaction famille +65% avec économies gestion optimisée 18k€" }
+                ],
+                results: [
+                    { label: "Coordination tutelle", value: "Seamless" },
+                    { label: "Autonomie", value: "87% décisions" },
+                    { label: "Traçabilité", value: "100% légale" },
+                    { label: "Satisfaction", value: "+63%" }
+                ],
+                impact: { title: "Impact Psychiatrie CHU", value: "SUCCESS", desc: "Populations vulnérables - Droits préservés" },
+                flowNodes: [
+                    { id: "patient", icon: "🧠", label: "Patient", tooltip: "Trouble bipolaire - capacité fluctuante" },
+                    { id: "curateur", icon: "⚖️", label: "Curateur", tooltip: "Représentant légal curatelle renforcée" },
+                    { id: "cso", icon: "🧬", label: "CSO-Psy", tooltip: "Adaptation capacité + droits vulnérables" },
+                    { id: "psychiatre", icon: "👨‍⚕️", label: "Psychiatre", tooltip: "Évaluation capacité médicale" },
+                    { id: "droits", icon: "🛡️", label: "Droits", tooltip: "Protection droits + autonomie résiduelle" }
+                ],
+                logs: [
+                    { type: "info", icon: "🤖", text: "[PSYCH-EVAL] Évaluation capacité consentement - Trouble bipolaire" },
+                    { type: "warning", icon: "⚖️", text: "[VULNERABLE] Patient sous curatelle renforcée détecté" },
+                    { type: "coordination", icon: "🔄", text: "[CURATEUR-COORD] Coordination avec curateur activée seamless" },
+                    { type: "success", icon: "🤖", text: "[INTERFACE-ADAPT] Adaptation troubles cognitifs déployée" },
+                    { type: "human", icon: "👨‍⚕️", text: "[DROITS-PROTECT] Droits patient vulnérable préservés par équipe" }
+                ]
+            }
+        };
+
+        function toggleViewMode() {
+            const body = document.body;
+            const toggleText = document.getElementById('viewModeText');
+            
+            if (isDirectorMode) {
+                body.className = 'technical-mode';
+                toggleText.textContent = '🔧 Mode Technique';
+                isDirectorMode = false;
+            } else {
+                body.className = 'director-mode';
+                toggleText.textContent = '👔 Mode Directeur';
+                isDirectorMode = true;
+            }
+            
+            if (currentScenario) {
+                loadScenarioContent(currentScenario);
+            }
+        }
+
+        function loadScenario() {
+            const select = document.getElementById('scenarioSelect');
+            const content = document.getElementById('scenarioContent');
+            const scenarioKey = select.value;
+            
+            if (!scenarioKey || !scenarios[scenarioKey]) {
+                content.style.display = 'none';
+                currentScenario = null;
+                return;
+            }
+            
+            currentScenario = scenarioKey;
+            loadScenarioContent(scenarioKey);
+            content.style.display = 'block';
+            content.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function loadScenarioContent(scenarioKey) {
+            const content = document.getElementById('scenarioContent');
+            const scenario = scenarios[scenarioKey];
+            
+            content.innerHTML = `
+                <div class="scenario-title">${scenario.title}</div>
+                
+                <div class="context-section">
+                    <h3>📋 Contexte Clinique CHU</h3>
+                    <p>${scenario.context}</p>
+                </div>
+                
+                <div class="workflow-section">
+                    <h3 class="workflow-title">🔄 Workflow Biomimétique CHU</h3>
+                    <div class="workflow-steps">
+                        ${scenario.steps.map((step, index) => `
+                            <div class="step">
+                                <div class="step-number">${index + 1}</div>
+                                <div class="step-text">${step}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="biomimetic-flow">
+                    <h3 class="flow-title">🧠 Vue Neuronale de l'Orchestration CHU</h3>
+                    <p>Visualisation temps réel des interactions entre acteurs et composants biomimétiques spécialisés</p>
+                    <div class="flow-diagram" id="flowDiagram-${scenarioKey}">
+                        ${scenario.flowNodes.map((node, index) => `
+                            <div class="flow-node" id="node-${node.id}" title="${node.tooltip}">
+                                <div>${node.icon}</div>
+                                <div class="flow-node-label">${node.label}</div>
+                            </div>
+                            ${index < scenario.flowNodes.length - 1 ? '<div class="flow-arrow">→</div>' : ''}
+                        `).join('')}
+                    </div>
+                    <button class="neural-view-toggle" onclick="activateNeuralAnimation('${scenarioKey}')">
+                        🔬 Activer Animation Neuronale CHU
+                    </button>
+                </div>
+                
+                <div class="metrics-section">
+                    <div class="metrics-grid">
+                        ${scenario.metrics.map((metric, index) => `
+                            <div class="metric-card" title="${metric.tooltip}">
+                                <div class="metric-value">${metric.label}</div>
+                                <div class="metric-label">${metric.value}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <button class="demo-button" onclick="runScenarioDemo('${scenarioKey}')">
+                    🎬 Lancer la Démonstration Interactive CHU
+                </button>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <button class="export-btn" onclick="resetScenario('${scenarioKey}')" style="background: #dc2626; padding: 10px 20px; margin-right: 10px;">
+                        🔄 Réinitialiser Scénario
+                    </button>
+                    <button class="export-btn" onclick="clearConsole('${scenarioKey}')" style="background: #f59e0b; padding: 10px 20px;">
+                        🗑️ Vider Console
+                    </button>
+                </div>
+                
+                <div class="console-section">
+                    <div class="console-header">
+                        <span>🖥️ Console Biomimétique CHU Toulouse - Logs Temps Réel</span>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <div class="log-legend">
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background: #22c55e;"></div>
+                                    <span>Auto</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background: #d2691e;"></div>  
+                                    <span>Humain</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-dot" style="background: #9333ea;"></div>
+                                    <span>Coordination</span>
+                                </div>
+                            </div>
+                            <button onclick="clearConsole('${scenarioKey}')" style="background: #f59e0b; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; cursor: pointer;">🗑️ Vider</button>
+                        </div>
+                    </div>
+                    <div id="console-${scenarioKey}">
+                        <div class="console-log log-info">
+                            <span class="log-icon">💻</span>
+                            <span>Console CHU prête - Cliquez sur "Lancer la Démonstration" pour voir QuantumConsent en action...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="results-section">
+                    <h3 class="results-title">📊 Résultats & Impact CHU Toulouse</h3>
+                    <div class="results-grid">
+                        ${scenario.results.map(result => `
+                            <div class="result-card">
+                                <div class="result-label">${result.label}</div>
+                                <div class="result-value">${result.value}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="impact-global">
+                        <div class="impact-title">${scenario.impact.title}</div>
+                        <div class="impact-value">🎯 ${scenario.impact.value}</div>
+                        <div class="impact-desc">${scenario.impact.desc}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function activateNeuralAnimation(scenarioKey) {
+            const flowDiagram = document.getElementById(`flowDiagram-${scenarioKey}`);
+            const nodes = flowDiagram.querySelectorAll('.flow-node');
+            
+            nodes.forEach(node => node.classList.remove('active'));
+            
+            let delay = 0;
+            nodes.forEach((node, index) => {
+                setTimeout(() => {
+                    node.classList.add('active');
+                }, delay);
+                delay += 1000;
+            });
+            
+            setTimeout(() => {
+                alert('🧠 Animation neuronale CHU terminée ! Les composants biomimétiques sont synchronisés et opérationnels.');
+            }, delay + 500);
+        }
+        
+        function runScenarioDemo(scenarioKey) {
+            const console = document.getElementById(`console-${scenarioKey}`);
+            const scenario = scenarios[scenarioKey];
+            
+            console.innerHTML = '';
+            
+            const demoLogs = [
+                ...scenario.logs,
+                { type: "success", icon: "🧬", text: "[QUANTUM-CHU] Cœur biomimétique QuantumConsent CHU Toulouse activé" },
+                { type: "success", icon: "🔗", text: "[INTEGRATION-DPI] Connexion DPI ORBIS établie (36h vs 6 mois)" },
+                { type: "success", icon: "💰", text: "[ROI-CHU] ROI 624% secteur public validé" },
+                { type: "success", icon: "🎉", text: "[DEMO-CHU] Scénario CHU Toulouse exécuté avec succès !" }
+            ];
+            
+            let delay = 400;
+            demoLogs.forEach(log => {
+                setTimeout(() => {
+                    const logDiv = document.createElement('div');
+                    logDiv.className = `console-log log-${log.type}`;
+                    logDiv.innerHTML = `
+                        <span class="log-icon">${log.icon}</span>
+                        <span>${log.text}</span>
+                    `;
+                    logDiv.style.animation = 'fadeIn 0.5s ease-in';
+                    console.appendChild(logDiv);
+                    console.scrollTop = console.scrollHeight;
+                }, delay);
+                delay += 500;
+            });
+            
+            setTimeout(() => {
+                showQuantumMetrics();
+            }, delay + 1000);
+        }
+        
+        function showQuantumMetrics() {
+            if (document.querySelector('.quantum-metrics')) {
+                return;
+            }
+            
+            // Métriques spécifiques selon le scénario actuel
+            const scenarioMetrics = {
+                pediatrie: {
+                    metrics: [
+                        { label: "⚡ 7min | 🛡️ -89%", desc: "Tri-consent | Erreurs évitées" },
+                        { label: "💰 €23.4k | 👶 13ans", desc: "Économies | Patient mineur" },
+                        { label: "🔬 RTEP-2024 | ✅ 99.8%", desc: "Recherche | Conformité CPP" },
+                        { label: "👥 4 équipes | 📊 5ans", desc: "Coordination | Suivi longitudinal" }
+                    ]
+                },
+                urgences: {
+                    metrics: [
+                        { label: "⚡ <2min | 🚨 L1111-4", desc: "Mode dégradé | Exception vitale" },
+                        { label: "💰 €184k | 🛡️ 8sec", desc: "Coûts évités | Détection incident" },
+                        { label: "📄 67pages | ✅ 99.4%", desc: "Documentation | Conformité HAS" },
+                        { label: "👥 8 acteurs | 🏥 DPO", desc: "Notifications | Auto-compliance" }
+                    ]
+                },
+                radiotherapie: {
+                    metrics: [
+                        { label: "⚡ 16h | ☢️ ASN", desc: "Adaptation | Directive nucléaire" },
+                        { label: "💰 €52k | 📊 89pages", desc: "Formation évitée | Doc auto" },
+                        { label: "🔬 8 workflows | ✅ 100%", desc: "Nouveaux seuils | Équipes" },
+                        { label: "👥 167 patients | 🛡️ IRSN", desc: "MAJ dossiers | Export temps réel" }
+                    ]
+                },
+                recherche: {
+                    metrics: [
+                        { label: "⚡ 2.5j | 🔬 RTEP-2025", desc: "Setup protocole | Oncologie pédiatrique" },
+                        { label: "💰 +245% | 📊 3x", desc: "Productivité ARC | Tri-consentement" },
+                        { label: "🧪 97 patients | ✅ 5ans", desc: "Participants actifs | Tracking auto" },
+                        { label: "👥 ANSM | 🛡️ 100%", desc: "Exports temps réel | Anonymisation" }
+                    ]
+                },
+                chirurgie: {
+                    metrics: [
+                        { label: "⚡ 91% PPS | 🏥 Whipple", desc: "Personnalisation | Pancréatectomie" },
+                        { label: "💰 €31k | 📊 -93%", desc: "ROI annuel | Erreurs évitées" },
+                        { label: "🔗 100% sync | ✅ 6acteurs", desc: "Planning bloc | Coordination" },
+                        { label: "👥 RCP intégrée | 🛡️ 24mois", desc: "Traçabilité | Suivi post-op" }
+                    ]
+                },
+                psychiatrie: {
+                    metrics: [
+                        { label: "⚡ Continue | 🧠 Bipolaire", desc: "Éval capacité | Trouble mental" },
+                        { label: "💰 €18k | 📊 +65%", desc: "Économies | Satisfaction famille" },
+                        { label: "⚖️ Seamless | ✅ 99.6%", desc: "Coordination tutelle | Conformité" },
+                        { label: "👥 87% autonomie | 🛡️ 100%", desc: "Décisions patient | Protection droits" }
+                    ]
+                }
+            };
+            
+            const currentMetrics = scenarioMetrics[currentScenario] || scenarioMetrics.pediatrie;
+            
+            const quantumDiv = document.createElement('div');
+            quantumDiv.className = 'quantum-metrics';
+            quantumDiv.innerHTML = `
+                <h3>📊 Métriques QuantumConsent CHU Toulouse - ${scenarios[currentScenario]?.title.split(':')[0] || 'Scénario'}</h3>
+                <div class="metrics-grid">
+                    ${currentMetrics.metrics.map(metric => `
+                        <div class="metric-card">
+                            <div class="metric-value">${metric.label}</div>
+                            <div class="metric-label">${metric.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            const consoleSection = document.querySelector('.console-section');
+            consoleSection.insertAdjacentElement('afterend', quantumDiv);
+        }
+
+        function resetAllTests() {
+            const testItems = document.querySelectorAll('.test-item');
+            testItems.forEach((item, index) => {
+                // Supprimer toutes les classes d'état
+                item.classList.remove('running', 'passed', 'failed');
+                
+                // Restaurer le contenu original
+                const testNames = ['connectivité', 'sécurité', 'conformité', 'performance'];
+                const testLabels = ['🔗 Connectivité', '🛡️ Sécurité', '✅ Conformité', '⚡ Performance'];
+                const testDescs = ['Test des connexions DPI/ORBIS', 'Vérification SOBICA', 'Audit RGPD/HAS/ANSM', 'Charge système optimale'];
+                
+                if (index < testNames.length) {
+                    item.innerHTML = `<h4>${testLabels[index]}</h4><p>${testDescs[index]}</p>`;
+                    item.setAttribute('onclick', `runTest('${testNames[index]}')`);
+                }
+            });
+            
+            // Nettoyer la console de tests et revenir à la vue tests
+            clearTestConsole();
+            backToTests();
+            
+            alert('🔄 Tous les tests ont été réinitialisés !\n\nVous pouvez maintenant relancer les tests individuellement.');
+        }
+
+        // Modal functions
+        function openAuditTrail() {
+            document.getElementById('auditTrailModal').style.display = 'flex';
+            loadAuditData();
+        }
+
+        function openFeedback() {
+            document.getElementById('feedbackModal').style.display = 'flex';
+        }
+
+        function openEvents() {
+            document.getElementById('eventsModal').style.display = 'flex';
+        }
+
+        function openTests() {
+            document.getElementById('testsModal').style.display = 'flex';
+        }
+
+        function openDocumentation() {
+            document.getElementById('docModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            
+            // Arrêter le stream live si on ferme la modal d'audit
+            if (modalId === 'auditTrailModal' && liveStreamActive) {
+                liveStreamActive = false;
+                if (liveStreamInterval) {
+                    clearInterval(liveStreamInterval);
+                    liveStreamInterval = null;
+                }
+                
+                // Remettre le bouton à l'état initial
+                const btn = document.getElementById('liveStreamBtn');
+                if (btn) {
+                    btn.innerHTML = '🔴 Démarrer Stream Live';
+                    btn.style.background = '#dc2626';
+                }
+            }
+        }
+
+        function loadAuditData() {
+            const auditData = [
+                { timestamp: '2025-05-31 14:23:15', user: 'Dr. Martin (Radiothérapie)', action: 'Accès consentement', patient: 'ID#123456', result: 'Succès', details: 'Consultation consentement recherche RTEP-2024' },
+                { timestamp: '2025-05-31 14:25:32', user: 'IDE Dupont (Urgences)', action: 'Modification consentement', patient: 'ID#654321', result: 'Succès', details: 'Retrait consentement étude COVID' },
+                { timestamp: '2025-05-31 14:27:18', user: 'ARC Morel (Recherche)', action: 'Création protocole', patient: 'ID#789012', result: 'Succès', details: 'Nouveau protocole oncologie pédiatrique' },
+                { timestamp: '2025-05-31 14:29:45', user: 'System QuantumConsent', action: 'Détection incident', patient: 'ID#345678', result: 'Alerte', details: 'Tentative accès non autorisé - Bloqué' },
+                { timestamp: '2025-05-31 14:31:22', user: 'DPO Virtual', action: 'Vérification conformité', patient: 'Tous', result: 'Succès', details: 'Audit automatique RGPD - 99.7% conformité' }
+            ];
+
+            // Stocker les données globalement pour les filtres
+            window.currentAuditData = auditData;
+            displayAuditTable(auditData);
+        }
+
+        function displayAuditTable(data) {
+            let tableHTML = '<table class="audit-table"><thead><tr><th>Date/Heure</th><th>Utilisateur</th><th>Action</th><th>Patient</th><th>Résultat</th><th>Détails</th></tr></thead><tbody>';
+            
+            data.forEach(item => {
+                const statusClass = item.result === 'Succès' ? 'status-success' : item.result === 'Alerte' ? 'status-warning' : 'status-error';
+                tableHTML += `<tr>
+                    <td>${item.timestamp}</td>
+                    <td>${item.user}</td>
+                    <td>${item.action}</td>
+                    <td>${item.patient}</td>
+                    <td><span class="audit-status ${statusClass}">${item.result}</span></td>
+                    <td>${item.details}</td>
+                </tr>`;
+            });
+            
+            tableHTML += '</tbody></table>';
+            document.getElementById('auditTableContainer').innerHTML = tableHTML;
+        }
+
+        function applyAdvancedFilters() {
+            const userFilter = document.getElementById('userFilter').value;
+            const actionFilter = document.getElementById('actionFilter').value;
+            const resultFilter = document.getElementById('resultFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            let filteredData = window.currentAuditData.filter(item => {
+                const matchUser = !userFilter || item.user.includes(userFilter);
+                const matchAction = !actionFilter || item.action.includes(actionFilter);
+                const matchResult = !resultFilter || item.result === resultFilter;
+                const matchDate = !dateFilter || item.timestamp.includes(dateFilter);
+                
+                return matchUser && matchAction && matchResult && matchDate;
+            });
+            
+            displayAuditTable(filteredData);
+        }
+
+        function resetFilters() {
+            document.getElementById('userFilter').value = '';
+            document.getElementById('actionFilter').value = '';
+            document.getElementById('resultFilter').value = '';
+            document.getElementById('dateFilter').value = '2025-05-31';
+            document.getElementById('auditSearch').value = '';
+            
+            displayAuditTable(window.currentAuditData);
+            alert('🔄 Filtres réinitialisés!\nToutes les entrées sont maintenant affichées.');
+        }
+
+        function toggleLiveStream() {
+            const btn = document.getElementById('liveStreamBtn');
+            
+            if (!liveStreamActive) {
+                // Démarrer le stream live
+                liveStreamActive = true;
+                btn.innerHTML = '🟢 Stream Live Actif';
+                btn.style.background = '#22c55e';
+                
+                addAuditLog('info', '🔴', '[STREAM-START] Stream Live démarré - Nouveaux logs toutes les 3 secondes');
+                
+                liveStreamInterval = setInterval(() => {
+                    addLiveLogEntry();
+                }, 3000); // Nouveau log toutes les 3 secondes
+                
+                alert('🔴 Stream Live démarré!\nDe nouveaux logs apparaîtront automatiquement toutes les 3 secondes.');
+            } else {
+                // Arrêter le stream live
+                liveStreamActive = false;
+                btn.innerHTML = '🔴 Démarrer Stream Live';
+                btn.style.background = '#dc2626';
+                
+                addAuditLog('info', '🟢', '[STREAM-STOP] Stream Live arrêté - Fin de la surveillance temps réel');
+                
+                if (liveStreamInterval) {
+                    clearInterval(liveStreamInterval);
+                    liveStreamInterval = null;
+                }
+                
+                alert('🟢 Stream Live arrêté!\nLes logs ne se mettent plus à jour automatiquement.');
+            }
+        }
+
+        function addLiveLogEntry() {
+            if (!window.currentAuditData) return;
+            
+            const liveEntries = [
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), user: 'Dr. Leblanc (Cardiologie)', action: 'Accès consentement', patient: 'ID#' + Math.floor(Math.random() * 900000 + 100000), result: 'Succès', details: 'Consultation consentement angioplastie' },
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), user: 'IDE Martinez (Pédiatrie)', action: 'Modification consentement', patient: 'ID#' + Math.floor(Math.random() * 900000 + 100000), result: 'Succès', details: 'Mise à jour autorisation parentale' },
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), user: 'System QuantumConsent', action: 'Détection incident', patient: 'ID#' + Math.floor(Math.random() * 900000 + 100000), result: Math.random() > 0.8 ? 'Alerte' : 'Succès', details: 'Contrôle accès automatique' },
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), user: 'ARC Dubois (Oncologie)', action: 'Création protocole', patient: 'ID#' + Math.floor(Math.random() * 900000 + 100000), result: 'Succès', details: 'Nouveau protocole immunothérapie' },
+                { timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19), user: 'DPO Virtual', action: 'Vérification conformité', patient: 'Tous', result: 'Succès', details: 'Audit automatique HAS - 99.8% conformité' }
+            ];
+            
+            const newEntry = liveEntries[Math.floor(Math.random() * liveEntries.length)];
+            
+            // Log dans la console audit
+            addAuditLog('info', '📊', `[STREAM-LOG] Nouveau log généré - ${newEntry.user} - ${newEntry.action} - ${newEntry.result}`);
+            
+            // Ajouter au début du tableau
+            window.currentAuditData.unshift(newEntry);
+            
+            // Limiter à 20 entrées pour éviter la surcharge
+            if (window.currentAuditData.length > 20) {
+                window.currentAuditData = window.currentAuditData.slice(0, 20);
+            }
+            
+            // Réappliquer les filtres actuels
+            applyAdvancedFilters();
+            
+            // Animation pour la nouvelle entrée
+            setTimeout(() => {
+                const firstRow = document.querySelector('.audit-table tbody tr:first-child');
+                if (firstRow) {
+                    firstRow.style.background = '#dcfce7';
+                    firstRow.style.animation = 'fadeIn 0.5s ease-in';
+                    setTimeout(() => {
+                        firstRow.style.background = '';
+                    }, 2000);
+                }
+            }, 100);
+        }
+
+        function filterAuditData() {
+            const searchTerm = document.getElementById('auditSearch').value.toLowerCase();
+            
+            if (!window.currentAuditData) return;
+            
+            let filteredData = window.currentAuditData.filter(item => {
+                const searchText = `${item.timestamp} ${item.user} ${item.action} ${item.patient} ${item.result} ${item.details}`.toLowerCase();
+                return searchText.includes(searchTerm);
+            });
+            
+            displayAuditTable(filteredData);
+        }
+
+        function exportAudit(format) {
+            const currentData = window.currentAuditData || [];
+            const timestamp = new Date().toISOString().split('T')[0];
+            const filename = `audit_chu_toulouse_${timestamp}`;
+            
+            // Ajouter l'export à l'historique
+            const exportEntry = {
+                id: Date.now(),
+                format: format,
+                filename: filename,
+                timestamp: new Date().toLocaleString('fr-FR'),
+                entries: currentData.length
+            };
+            exportHistory.push(exportEntry);
+            
+            // Log dans la console audit
+            addAuditLog('success', '📊', `[EXPORT-${format.toUpperCase()}] ${filename}.${format} généré - ${currentData.length} entrées - Hash: ${Math.random().toString(36).substring(2, 8)}`);
+            
+            if (format === 'csv') {
+                // Simulation d'un export CSV enrichi
+                const csvContent = [
+                    'Date/Heure,Utilisateur,Action,Patient,Résultat,Détails,Hash_Intégrité,IP_Source',
+                    ...currentData.map(item => 
+                        `"${item.timestamp}","${item.user}","${item.action}","${item.patient}","${item.result}","${item.details}","SHA256:${Math.random().toString(36).substring(2, 15)}","10.1.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}"`
+                    )
+                ].join('\n');
+                
+                alert(`📊 Export CSV enrichi généré avec succès!\n\nFichier: ${filename}.csv\nTaille: ${Math.ceil(csvContent.length/1024)} KB\nEntrées: ${currentData.length}\nHash d'intégrité: SHA256:${Math.random().toString(36).substring(2, 15)}\n\n✅ Conforme RGPD - Données anonymisées\n🔒 Signature électronique incluse\n📋 Métadonnées d'audit complètes`);
+                
+            } else if (format === 'pdf') {
+                alert(`📄 Export PDF sécurisé généré avec succès!\n\nFichier: ${filename}.pdf\nPages: ${Math.ceil(currentData.length/10)}\nEntrées: ${currentData.length}\nCertificat: eIDAS Qualifié\n\n✅ Conforme HAS/ARS - Audit trail certifié\n🔒 Protection par mot de passe\n📋 Horodatage qualifié RFC 3161\n⚖️ Valeur probante juridique`);
+                
+            } else if (format === 'json') {
+                const jsonExport = {
+                    metadata: {
+                        export_timestamp: new Date().toISOString(),
+                        chu_source: "CHU Toulouse",
+                        system: "QuantumConsent v2.1.4",
+                        compliance: ["RGPD", "HAS", "ARS", "CNIL", "ANSM"],
+                        integrity_hash: `SHA256:${Math.random().toString(36).substring(2, 15)}`,
+                        total_entries: currentData.length
+                    },
+                    audit_logs: currentData.map(item => ({
+                        ...item,
+                        event_id: `QC_${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+                        integrity_check: `SHA256:${Math.random().toString(36).substring(2, 15)}`,
+                        ip_source: `10.1.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`,
+                        compliance_flags: {
+                            gdpr_compliant: true,
+                            has_approved: true,
+                            anonymized: item.patient.startsWith('ID#'),
+                            audit_trail: true
+                        }
+                    }))
+                };
+                
+                alert(`📋 Export JSON structuré généré avec succès!\n\nFichier: ${filename}.json\nTaille: ${Math.ceil(JSON.stringify(jsonExport).length/1024)} KB\nFormat: JSON Schema v7\nValidation: OpenAPI 3.0\n\n✅ Compatible API REST\n🔗 Intégration SIEM ready\n📊 Métadonnées enrichies\n🔒 Hash d'intégrité par entrée`);
+            }
+        }
+
+        // NOUVELLE FONCTION : Effacer tous les exports
+        function clearAllExports() {
+            if (exportHistory.length === 0) {
+                addAuditLog('warning', '🗑️', '[CLEAR-EXPORTS] Aucun export à effacer - Historique déjà vide');
+                alert('🗑️ Aucun export à effacer!\n\nL\'historique des exports est déjà vide.');
+                return;
+            }
+            
+            const exportCount = exportHistory.length;
+            
+            // Log détaillé de ce qui va être effacé
+            addAuditLog('warning', '🗑️', `[CLEAR-START] Début nettoyage ${exportCount} export(s) de l'historique`);
+            
+            exportHistory.forEach((exportItem, index) => {
+                setTimeout(() => {
+                    addAuditLog('warning', '🗑️', `[CLEAR-${index + 1}] Suppression ${exportItem.format.toUpperCase()} ${exportItem.filename} (${exportItem.entries} entrées)`);
+                }, index * 200);
+            });
+            
+            setTimeout(() => {
+                exportHistory = []; // Vider l'historique
+                addAuditLog('success', '✅', `[CLEAR-COMPLETE] ${exportCount} export(s) effacé(s) - Mémoire libérée - Données sécurisées supprimées`);
+            }, exportCount * 200 + 500);
+            
+            alert(`🗑️ Nettoyage des exports terminé!\n\n${exportCount} export(s) effacé(s) de l'historique.\n\n✅ Console exports nettoyée\n🔒 Données sécurisées supprimées\n📋 Mémoire libérée`);
+        }
+
+        function addAuditLog(type, icon, text) {
+            const console = document.getElementById('console-audit');
+            if (!console) return;
+            
+            const logDiv = document.createElement('div');
+            logDiv.className = `console-log log-${type}`;
+            logDiv.innerHTML = `
+                <span class="log-icon">${icon}</span>
+                <span>${text}</span>
+            `;
+            logDiv.style.animation = 'fadeIn 0.5s ease-in';
+            console.appendChild(logDiv);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearAuditConsole() {
+            const console = document.getElementById('console-audit');
+            if (console) {
+                console.innerHTML = `
+                    <div class="console-log log-info">
+                        <span class="log-icon">🗑️</span>
+                        <span>Console audit vidée - Prêt pour nouvelles actions...</span>
+                    </div>
+                `;
+            }
+        }
+
+        function setRating(rating) {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+            document.getElementById('currentRating').value = rating;
+        }
+
+        function submitFeedback() {
+            const rating = document.getElementById('currentRating').value;
+            const comment = document.getElementById('feedbackComment').value;
+            
+            if (!rating) {
+                alert('Veuillez sélectionner une note avant de soumettre.');
+                return;
+            }
+            
+            alert(`✅ Feedback soumis avec succès!\nNote: ${rating}/5 étoiles\nCommentaire: ${comment || 'Aucun commentaire'}\n\nMerci pour votre retour sur QuantumConsent CHU!`);
+            closeModal('feedbackModal');
+            
+            // Reset form
+            document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+            document.getElementById('feedbackComment').value = '';
+            document.getElementById('currentRating').value = '';
+        }
+
+        function simulateEvent(eventType) {
+            const eventsConsole = document.getElementById('console-events');
+            
+            const events = {
+                maintenance: {
+                    title: 'Maintenance Système',
+                    description: 'Simulation d\'une maintenance planifiée du système QuantumConsent',
+                    steps: [
+                        { icon: '📢', text: 'Notification automatique des utilisateurs (15 min avant)', type: 'info' },
+                        { icon: '💾', text: 'Sauvegarde automatique des sessions en cours', type: 'warning' },
+                        { icon: '🔒', text: 'Activation du mode maintenance sécurisé', type: 'warning' },
+                        { icon: '🔧', text: 'Mise à jour des composants biomimétiques', type: 'warning' },
+                        { icon: '🔍', text: 'Vérification de l\'intégrité des données', type: 'info' },
+                        { icon: '🚀', text: 'Redémarrage des services', type: 'warning' },
+                        { icon: '✅', text: 'Tests de conformité post-maintenance', type: 'success' },
+                        { icon: '🎉', text: 'Notification de fin de maintenance', type: 'success' }
+                    ]
+                },
+                security: {
+                    title: 'Incident Sécurité',
+                    description: 'Simulation d\'une tentative d\'accès non autorisé détectée par SOBICA',
+                    steps: [
+                        { icon: '🚨', text: 'Détection d\'anomalie par SOBICA (IA comportementale)', type: 'warning' },
+                        { icon: '📢', text: 'Alerte immédiate au DPO et à la DSI', type: 'warning' },
+                        { icon: '🔒', text: 'Isolation automatique de la session suspecte', type: 'warning' },
+                        { icon: '🔍', text: 'Analyse forensique des logs d\'accès', type: 'info' },
+                        { icon: '📋', text: 'Notification aux autorités compétentes (CNIL si nécessaire)', type: 'info' },
+                        { icon: '🛡️', text: 'Renforcement des contrôles d\'accès', type: 'warning' },
+                        { icon: '📄', text: 'Rapport d\'incident généré automatiquement', type: 'success' },
+                        { icon: '🔧', text: 'Mise à jour des politiques de sécurité', type: 'success' }
+                    ]
+                },
+                evolution: {
+                    title: 'Évolution Réglementaire',
+                    description: 'Simulation d\'une nouvelle directive ANSM détectée par AMORA',
+                    steps: [
+                        { icon: '📡', text: 'Détection automatique nouvelle réglementation ANSM', type: 'info' },
+                        { icon: '🔍', text: 'Analyse d\'impact sur les protocoles existants', type: 'warning' },
+                        { icon: '⚙️', text: 'Génération des nouveaux workflows conformes', type: 'warning' },
+                        { icon: '📢', text: 'Notification des équipes concernées', type: 'info' },
+                        { icon: '🎓', text: 'Déploiement des formations automatiques', type: 'warning' },
+                        { icon: '📋', text: 'Mise à jour des consentements patients', type: 'warning' },
+                        { icon: '✅', text: 'Validation de la conformité', type: 'success' },
+                        { icon: '📚', text: 'Archivage et documentation', type: 'success' }
+                    ]
+                }
+            };
+            
+            const event = events[eventType];
+            
+            // Ajouter log de début
+            addEventLog('info', '🚀', `[${event.title.toUpperCase()}] Simulation démarrée - ${event.description}`);
+            
+            // Exécuter les étapes avec délai
+            let delay = 500;
+            event.steps.forEach((step, index) => {
+                setTimeout(() => {
+                    addEventLog(step.type, step.icon, `[ÉTAPE ${index + 1}] ${step.text}`);
+                }, delay);
+                delay += 800;
+            });
+            
+            // Message de fin
+            setTimeout(() => {
+                addEventLog('success', '🎯', `[${event.title.toUpperCase()}] Simulation terminée avec succès - Tous les processus CHU validés`);
+            }, delay + 500);
+        }
+
+        function addEventLog(type, icon, text) {
+            const console = document.getElementById('console-events');
+            const logDiv = document.createElement('div');
+            logDiv.className = `console-log log-${type}`;
+            logDiv.innerHTML = `
+                <span class="log-icon">${icon}</span>
+                <span>${text}</span>
+            `;
+            logDiv.style.animation = 'fadeIn 0.5s ease-in';
+            console.appendChild(logDiv);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearEventsConsole() {
+            const console = document.getElementById('console-events');
+            if (console) {
+                console.innerHTML = `
+                    <div class="console-log log-info">
+                        <span class="log-icon">🗑️</span>
+                        <span>Console événements vidée - Prêt pour nouvelles simulations...</span>
+                    </div>
+                `;
+            }
+        }
+
+        function runTest(testName) {
+            // Basculer vers la vue console dans la modal
+            document.getElementById('testsView').style.display = 'none';
+            document.getElementById('consoleView').style.display = 'block';
+            
+            const testElement = document.querySelector(`[onclick="runTest('${testName}')"]`);
+            const consoleContainer = document.getElementById('console-tests');
+            
+            testElement.classList.add('running');
+            testElement.innerHTML = `<h4>⏳ ${testName.charAt(0).toUpperCase() + testName.slice(1)}</h4><p>Test en cours...</p>`;
+            
+            // Ajouter log de début de test dans la console de la modal
+            if (consoleContainer) {
+                const startLogDiv = document.createElement('div');
+                startLogDiv.className = 'console-log log-warning';
+                startLogDiv.innerHTML = `
+                    <span class="log-icon">🧪</span>
+                    <span>[TEST-START] Lancement test ${testName.toUpperCase()} - Validation système CHU...</span>
+                `;
+                startLogDiv.style.animation = 'fadeIn 0.5s ease-in';
+                consoleContainer.appendChild(startLogDiv);
+                consoleContainer.scrollTop = consoleContainer.scrollHeight;
+            }
+            
+            setTimeout(() => {
+                const success = Math.random() > 0.2; // 80% de chance de succès
+                testElement.classList.remove('running');
+                testElement.classList.add(success ? 'passed' : 'failed');
+                testElement.innerHTML = `<h4>${success ? '✅' : '❌'} ${testName.charAt(0).toUpperCase() + testName.slice(1)}</h4><p>${success ? 'Test réussi' : 'Test échoué'}</p>`;
+                
+                // Log de fin de test dans la console de la modal
+                if (consoleContainer) {
+                    const endLogDiv = document.createElement('div');
+                    endLogDiv.className = `console-log ${success ? 'log-success' : 'log-warning'}`;
+                    
+                    // Messages détaillés selon le type de test
+                    const testMessages = {
+                        'connectivité': success ? 
+                            '[CONNECTIVITÉ-OK] DPI ORBIS connecté - Latence 12ms - 99.8% disponibilité' : 
+                            '[CONNECTIVITÉ-FAIL] Timeout DPI ORBIS - Vérifier réseau CHU',
+                        'sécurité': success ? 
+                            '[SÉCURITÉ-OK] SOBICA actif - 0 intrusion détectée - Pare-feu CHU opérationnel' : 
+                            '[SÉCURITÉ-FAIL] Anomalie SOBICA - Incident sécurité potentiel détecté',
+                        'conformité': success ? 
+                            '[CONFORMITÉ-OK] Audit RGPD/HAS/ANSM validé - 99.7% conformité' : 
+                            '[CONFORMITÉ-FAIL] Non-conformité détectée - Intervention DPO requise',
+                        'performance': success ? 
+                            '[PERFORMANCE-OK] Charge système 23% - 847 utilisateurs actifs CHU' : 
+                            '[PERFORMANCE-FAIL] Surcharge détectée - Optimisation requise'
+                    };
+                    
+                    endLogDiv.innerHTML = `
+                        <span class="log-icon">${success ? '✅' : '❌'}</span>
+                        <span>${testMessages[testName] || `[TEST-${success ? 'SUCCESS' : 'FAILED'}] Test ${testName.toUpperCase()} ${success ? 'validé' : 'échoué'}`}</span>
+                    `;
+                    endLogDiv.style.animation = 'fadeIn 0.5s ease-in';
+                    consoleContainer.appendChild(endLogDiv);
+                    consoleContainer.scrollTop = consoleContainer.scrollHeight;
+                }
+            }, 2000);
+        }
+
+        function backToTests() {
+            // Retour à la vue tests
+            document.getElementById('consoleView').style.display = 'none';
+            document.getElementById('testsView').style.display = 'block';
+        }
+
+        function clearTestConsole() {
+            const consoleContainer = document.getElementById('console-tests');
+            if (consoleContainer) {
+                consoleContainer.innerHTML = `
+                    <div class="console-log log-info">
+                        <span class="log-icon">🗑️</span>
+                        <span>Console tests vidée - Prêt pour nouveaux tests...</span>
+                    </div>
+                `;
+            }
+        }
+
+        function resetScenario(scenarioKey) {
+            // Réinitialiser la console
+            const console = document.getElementById(`console-${scenarioKey}`);
+            if (console) {
+                console.innerHTML = `
+                    <div class="console-log log-info">
+                        <span class="log-icon">💻</span>
+                        <span>Console CHU prête - Cliquez sur "Lancer la Démonstration" pour voir QuantumConsent en action...</span>
+                    </div>
+                `;
+            }
+            
+            // Réinitialiser l'animation neuronale
+            const flowDiagram = document.getElementById(`flowDiagram-${scenarioKey}`);
+            if (flowDiagram) {
+                const nodes = flowDiagram.querySelectorAll('.flow-node');
+                nodes.forEach(node => node.classList.remove('active'));
+            }
+            
+            // Supprimer les métriques quantum si elles existent
+            const quantumMetrics = document.querySelector('.quantum-metrics');
+            if (quantumMetrics) {
+                quantumMetrics.remove();
+            }
+            
+            alert('🔄 Scénario réinitialisé !\n\nLa console, l\'animation neuronale et les métriques ont été remises à zéro.');
+        }
+
+        function clearConsole(scenarioKey) {
+            const console = document.getElementById(`console-${scenarioKey}`);
+            if (console) {
+                console.innerHTML = `
+                    <div class="console-log log-info">
+                        <span class="log-icon">🗑️</span>
+                        <span>Console vidée - Prêt pour une nouvelle démonstration...</span>
+                    </div>
+                `;
+            }
+        }
+
+        function showSection(section) {
+            // Update nav buttons
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide sections (for now just scenarios is visible)
+            if (section === 'scenarios') {
+                document.querySelector('.main-container').style.display = 'block';
+            }
+        }
+
+        // Close modal when clicking outside et nettoyage du stream live
+        window.onclick = function(event) {
+            const modals = ['auditTrailModal', 'feedbackModal', 'eventsModal', 'testsModal', 'docModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    // Fermer la modal et nettoyer le stream live si nécessaire
+                    closeModal(modalId);
+                }
+            });
+        }
+
+        // Vérification complète de toutes les fonctions principales
+        function healthCheck() {
+            const functions = [
+                'loadScenario', 'loadScenarioContent', 'activateNeuralAnimation', 
+                'runScenarioDemo', 'showQuantumMetrics', 'resetScenario', 'clearConsole',
+                'openAuditTrail', 'openFeedback', 'openEvents', 'openTests', 'openDocumentation',
+                'loadAuditData', 'applyAdvancedFilters', 'resetFilters', 'exportAudit', 'clearAllExports',
+                'toggleLiveStream', 'addLiveLogEntry', 'addAuditLog', 'clearAuditConsole',
+                'setRating', 'submitFeedback', 'simulateEvent', 'addEventLog', 'clearEventsConsole',
+                'runTest', 'resetAllTests', 'toggleViewMode', 'backToTests', 'clearTestConsole'
+            ];
+            
+            console.log('🔍 HealthCheck QuantumConsent CHU:');
+            functions.forEach(funcName => {
+                const exists = typeof window[funcName] === 'function';
+                console.log(`${exists ? '✅' : '❌'} ${funcName}`);
+            });
+            
+            console.log(`📊 Total: ${functions.filter(f => typeof window[f] === 'function').length}/${functions.length} fonctions OK`);
+        }
+
+        // Auto-check au chargement - version silencieuse
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialisation silencieuse sans log console
+            // healthCheck(); // Fonction disponible pour debug manuel si besoin
+        });
+    </script>
+
+</body>
+</html>
